@@ -20,3 +20,9 @@ Get your API Token here.
 And your ![#f03c15](https://via.placeholder.com/15/f03c15/f03c15.png) workspace and ![#1589F0](https://via.placeholder.com/15/1589F0/1589F0.png) project IDs can be found here in your toggl urls:
 
 ![example url](https://i.imgur.com/kigbMh3.png)
+
+Add the following to your .gitignore so that user's togglkeys aren't accidently posted to a public repo or synced across teams
+```
+# GoToggl specific api key file
+*togglkey.json
+```
