@@ -15,7 +15,7 @@ This plugin allows you to track your Toggl time directly from the Godot interfac
     "description": "GoToggl Entry"
 }
 ```
-Get your API Token here.
+Get your API Token [here](https://track.toggl.com/profile) listed towards the bottom of the page.
 
 And your ![#f03c15](https://via.placeholder.com/15/f03c15/f03c15.png) workspace and ![#1589F0](https://via.placeholder.com/15/1589F0/1589F0.png) project IDs can be found here in your toggl urls:
 
