@@ -10,66 +10,80 @@ var workspace: int
 var project: int
 var description: String
 
+var dialog_scene = preload("res://addons/gotoggl/keysetup.tscn")
+var dialog
 var button_scene = preload("res://addons/gotoggl/GoTogglLogo.tscn")
 var button
-var b_toggl: Button
+var b_toggl: ToolButton
 var b_toggl_inactive = preload("res://addons/gotoggl/toggl-logo.png")
 var b_toggl_active = preload("res://addons/gotoggl/toggl-logo-active.png")
 var is_Initialized: bool = false
 var isActive: bool = false
 
+var editorNode
 var httpContainer: VBoxContainer
 var httpClient: HTTPRequest
 var headers
-
 
 var time_start = 0
 var time_end = 0
 var datetime: Dictionary
 
 func _enter_tree() -> void:
+	editorNode = get_tree().root.get_node("EditorNode")
+	dialog = dialog_scene.instance()
+	dialog.connect("updated_gen", self, "setup")
+	editorNode.add_child(dialog)
+	add_tool_menu_item("GoToggl Wizard", self, "_show_gen")
+
+	httpContainer = VBoxContainer.new()
+	httpClient = HTTPRequest.new()
+	httpContainer.add_child(httpClient)
+	editorNode.add_child(httpContainer)
+	httpClient.connect("request_completed", self, "_on_request_completed")
+
 	var file = File.new()
 	if file.file_exists(togglkey):
-		file.open(togglkey, file.READ)
-		var keyText = file.get_as_text()
-		keyDict = JSON.parse(keyText).result
-		file.close()
-
-		if keyDict.find("api_token") == -1:
-			print("GoToggl: api_token not found, please check togglkey.json")
-			pass
-		apiKey = keyDict["api_token"]
-
-		if keyDict.find("workspace_id") == -1:
-			print("GoToggl: workspace_id not found, please check togglkey.json")
-			pass
-		workspace = keyDict["workspace_id"]
-
-		if keyDict.find("project_id") == -1:
-			print("GoToggl: project_id not found, please check togglkey.json")
-			pass
-		project = keyDict["project_id"]
-
-		if keyDict.find("description") == -1:
-			description = "GoToggl Entry"
-		else:
-			description = keyDict["description"]
-
-		var editorNode = get_tree().root.get_node("EditorNode")
-		httpContainer = VBoxContainer.new()
-		httpClient = HTTPRequest.new()
-		httpContainer.add_child(httpClient)
-		editorNode.add_child(httpContainer)
-		httpClient.connect("request_completed", self, "_on_request_completed")
-		_authenticate()
+		setup()
 	else:
-		print("GoToggl: togglkey.json does not exist! Please create the required file to use this addon, then restart Godot. If unsure, consult GoToggl documentation.")
+		print("GoToggl: togglkey.json does not exist. Generate using Project > Tool > GoToggl Wizard.")
 	pass
 
+func setup():
+	var file = File.new()
+	file.open(togglkey, file.READ)
+	var keyText = file.get_as_text()
+	keyDict = JSON.parse(keyText).result
+	file.close()
+
+	if keyDict.keys().find("api_token") == -1:
+		print("GoToggl: api_token not found, please check GoToggl Wizard or togglkey.json")
+		return
+	apiKey = keyDict["api_token"]
+
+	if keyDict.keys().find("workspace_id") == -1:
+		print("GoToggl: workspace_id not found, please check GoToggl Wizard or togglkey.json")
+		return
+	workspace = keyDict["workspace_id"]
+
+	if keyDict.keys().find("project_id") == -1:
+		print("GoToggl: project_id not found, please check GoToggl Wizard or togglkey.json")
+		return
+	project = keyDict["project_id"]
+
+	if keyDict.keys().find("description") == -1:
+		description = "GoToggl Entry"
+	else:
+		description = keyDict["description"]
+
+	_authenticate()
 
 func _exit_tree() -> void:
+	remove_tool_menu_item("GoToggl Wizard")
 	httpContainer.queue_free()
 	httpContainer.free()
+	dialog.queue_free()
+	dialog.free()
 
 	if is_Initialized:
 		remove_control_from_container(0, button)
@@ -78,7 +92,7 @@ func _exit_tree() -> void:
 	pass
 
 func _authenticate():
-	authToken += "Basic "
+	authToken = "Basic "
 	var newKey = apiKey + ":api_token"
 	newKey = Marshalls.utf8_to_base64(newKey)
 	authToken += newKey
@@ -106,11 +120,12 @@ func _on_request_completed(result, response_code, headers, body):
 	if json.error == OK:
 		if json.result.keys().find("default_workspace_id") != -1:
 			print("GoToggl Authenticated")
-			button = button_scene.instance()
-			add_control_to_container(0, button)
-			b_toggl = button.get_node("b_toggl")
-			b_toggl.connect("pressed", self, "_button_pressed")
-			is_Initialized = true
+			if !is_Initialized:
+				button = button_scene.instance()
+				add_control_to_container(0, button)
+				b_toggl = button
+				b_toggl.connect("pressed", self, "_button_pressed")
+				is_Initialized = true
 
 func _button_pressed():
 	if !isActive: #start the counter
@@ -128,3 +143,6 @@ func _set_icon(active:bool):
 		b_toggl.icon = b_toggl_active
 	else:
 		b_toggl.icon = b_toggl_inactive
+
+func _show_gen(i):
+	dialog.call("show_gen")
