@@ -7,6 +7,9 @@ This plugin allows you to track your Toggl time directly from the Godot interfac
 - togglkey.json file
 
 ### togglkey.json
+
+This file can be automatically generated using the GoToggl Wizard, which can be found in Project > Tools > GoToggl Wizard.
+
 ```
 {
     "api_token": "dfd35235dsfsd24523523",
