@@ -22,6 +22,7 @@ func _enter_tree() -> void:
 	b_confirm = get_node("windialog/vbox/b_confirm")
 
 	b_confirm.connect("pressed", self, "_confirm")
+	win_dialog.connect("popup_hide", self, "_clear_lines")
 
 func show_gen():
 	# If the togglkey already exists we show the current values
@@ -79,13 +80,14 @@ func _confirm() -> void:
 	}
 	write_file(togglkey, JSON.print(keyDict))
 	win_dialog.hide()
+	yield(get_tree().create_timer(1), "timeout")
 	emit_signal("updated_gen")
 
+func _clear_lines():
 	t_api.text = ""
 	t_workspace.text = ""
 	t_project.text = ""
 	t_desc.text = ""
-
 
 func write_file(file_name, string:String):
 	var file = File.new()
