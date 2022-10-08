@@ -14,7 +14,7 @@ var dialog_scene = preload("res://addons/gotoggl/keysetup.tscn")
 var dialog
 var button_scene = preload("res://addons/gotoggl/GoTogglLogo.tscn")
 var button
-var b_toggl: ToolButton
+var b_toggl: Button
 var b_toggl_inactive = preload("res://addons/gotoggl/toggl-logo.png")
 var b_toggl_active = preload("res://addons/gotoggl/toggl-logo-active.png")
 var is_Initialized: bool = false
@@ -124,6 +124,7 @@ func _on_request_completed(result, response_code, headers, body):
 				button = button_scene.instance()
 				add_control_to_container(0, button)
 				b_toggl = button
+				b_toggl.flat = true
 				b_toggl.connect("pressed", self, "_button_pressed")
 				is_Initialized = true
 
