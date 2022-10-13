@@ -3,7 +3,7 @@
 This plugin allows you to track your Toggl time directly from the Godot interface! 
 
 ## Requirements
-- Godot 3+
+- Godot 4+ (You can find a Godot 3 version [here](https://github.com/quantum1studios/GoToggl/tree/godot-3))
 - togglkey.json file
 
 ### togglkey.json
