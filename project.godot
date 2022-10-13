@@ -16,7 +16,7 @@ config/icon="res://icon.png"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/zylann.editor_debugger/plugin.cfg", "res://addons/gotoggl/plugin.cfg")
+enabled=PackedStringArray("res://addons/gotoggl/plugin.cfg")
 
 [physics]
 

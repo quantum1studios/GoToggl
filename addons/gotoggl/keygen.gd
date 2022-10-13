@@ -1,9 +1,7 @@
 @tool
-extends HBoxContainer
+extends Window
 
 var togglkey = "res://addons/gotoggl/togglkey.json"
-
-var win_dialog: Window
 
 var t_api: TextEdit
 var t_workspace: TextEdit
@@ -14,7 +12,6 @@ var b_confirm: Button
 signal updated_gen
 
 func _enter_tree() -> void:
-	win_dialog = get_node("windialog")
 	t_api = get_node("windialog/vbox/t_api")
 	t_workspace = get_node("windialog/vbox/t_workspace")
 	t_project = get_node("windialog/vbox/t_project")
@@ -22,11 +19,11 @@ func _enter_tree() -> void:
 	b_confirm = get_node("windialog/vbox/b_confirm")
 
 	b_confirm.connect("pressed",Callable(self,"_confirm"))
-	win_dialog.connect("visibility_changed",Callable(self,"_clear_lines"))
+	self.connect("visibility_changed",Callable(self,"_clear_lines"))
 
 func show_gen():
 	# If the togglkey already exists we show the current values
-	var file = File.new()
+	var file = FileAccess.new()
 	if file.file_exists(togglkey):
 		var json = JSON.new()
 		var error = json.parse(read_file(togglkey))
@@ -46,8 +43,8 @@ func show_gen():
 		else:
 			t_desc.text = "GoToggl Entry"
 
-	win_dialog.show()
-	win_dialog.popup_centered()
+	self.show()
+	self.popup_centered()
 
 func get_api() -> String:
 	return t_api.get_text()
@@ -81,12 +78,12 @@ func _confirm() -> void:
 		"description": get_desc(),
 	}
 	write_file(togglkey, JSON.stringify(keyDict))
-	win_dialog.hide()
+	self.hide()
 	await get_tree().create_timer(1).timeout
 	emit_signal("updated_gen")
 
 func _clear_lines():
-	if win_dialog.visible:
+	if self.visible:
 		return
 	
 	t_api.text = ""
@@ -95,14 +92,10 @@ func _clear_lines():
 	t_desc.text = ""
 
 func write_file(file_name, string:String):
-	var file = File.new()
-	file.open(file_name, File.WRITE)
+	var file = FileAccess.open(file_name, FileAccess.WRITE)
 	file.store_string(string)
-	file.close()
 
 func read_file(file_name) -> String:
-	var file = File.new()
-	file.open(file_name, file.READ)
+	var file = FileAccess.open(file_name, FileAccess.READ)
 	var keyText = file.get_as_text()
-	file.close()
 	return keyText

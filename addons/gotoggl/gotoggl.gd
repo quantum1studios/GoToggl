@@ -36,31 +36,28 @@ func _enter_tree() -> void:
 			editorNode = _i
 	dialog = dialog_scene.instantiate()
 	dialog.connect("updated_gen", Callable(self, "setup"))
-	editorNode.add_child(dialog)
+	editorNode.call_deferred("add_child", dialog)
 	add_tool_menu_item("GoToggl Wizard", Callable(self, "_show_gen"))
 
 	httpContainer = VBoxContainer.new()
 	httpClient = HTTPRequest.new()
 	httpContainer.add_child(httpClient)
-	editorNode.add_child(httpContainer)
+	editorNode.call_deferred("add_child", httpContainer)
 	httpClient.connect("request_completed", Callable(self, "_on_request_completed"))
 
-	var file = File.new()
-	if file.file_exists(togglkey):
+	if FileAccess.file_exists(togglkey):
 		setup()
 	else:
 		print("GoToggl: togglkey.json does not exist. Generate using Project > Tool > GoToggl Wizard.")
 	pass
 
 func setup():
-	var file = File.new()
-	file.open(togglkey, file.READ)
+	var file = FileAccess.open(togglkey, FileAccess.READ)
 	var keyText = file.get_as_text()
 	var test_json_conv = JSON.new()
 	# test_json_conv.parse_string(keyText)
 	#keyDict = test_json_conv.get_data()
 	keyDict = test_json_conv.parse_string(keyText)
-	file.close()
 
 	if keyDict.keys().find("api_token") == -1:
 		print("GoToggl: api_token not found, please check GoToggl Wizard or togglkey.json")

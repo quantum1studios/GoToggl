@@ -2,121 +2,112 @@
 
 [ext_resource type="Script" path="res://addons/gotoggl/keygen.gd" id="1"]
 
-[node name="hbox" type="Control"]
-layout_mode = 3
+[node name="windialog" type="Window"]
+title = "GoToggl Wizard"
+position = Vector2i(434, 202)
+size = Vector2i(338, 268)
+exclusive = true
+always_on_top = true
+popup_window = true
+min_size = Vector2i(338, 268)
+content_scale_mode = 1
+content_scale_aspect = 4
+script = ExtResource("1")
+
+[node name="vbox" type="VBoxContainer" parent="."]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-script = ExtResource("1")
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 2.0
 
-[node name="windialog" type="Window" parent="."]
-position = Vector2i(440, 185)
-size = Vector2i(334, 268)
-exclusive = true
-always_on_top = true
-popup_window = true
-
-[node name="vbox" type="VBoxContainer" parent="windialog"]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 5.0
-offset_top = 15.0
-offset_right = -5.0
-offset_bottom = -5.0
-grow_horizontal = 0
-grow_vertical = 2
-size_flags_horizontal = 5
-size_flags_vertical = 5
-
-[node name="l_api" type="RichTextLabel" parent="windialog/vbox"]
+[node name="l_api" type="RichTextLabel" parent="vbox"]
 layout_mode = 2
-offset_right = 324.0
+offset_right = 1152.0
 offset_bottom = 23.0
 grow_horizontal = 0
-size_flags_horizontal = 5
-size_flags_vertical = 5
+size_flags_stretch_ratio = 2.0
 text = "  API Key"
 fit_content_height = true
 
-[node name="t_api" type="TextEdit" parent="windialog/vbox"]
+[node name="t_api" type="TextEdit" parent="vbox"]
 layout_mode = 2
 offset_top = 27.0
-offset_right = 324.0
-offset_bottom = 35.0
+offset_right = 1152.0
+offset_bottom = 149.0
 grow_horizontal = 0
+size_flags_vertical = 3
 
-[node name="l_workspace" type="RichTextLabel" parent="windialog/vbox"]
+[node name="l_workspace" type="RichTextLabel" parent="vbox"]
 layout_mode = 2
-offset_top = 39.0
-offset_right = 324.0
-offset_bottom = 62.0
+offset_top = 153.0
+offset_right = 1152.0
+offset_bottom = 176.0
 grow_horizontal = 0
-size_flags_horizontal = 5
-size_flags_vertical = 5
+size_flags_stretch_ratio = 2.0
 text = "  Workspace ID"
 fit_content_height = true
 
-[node name="t_workspace" type="TextEdit" parent="windialog/vbox"]
+[node name="t_workspace" type="TextEdit" parent="vbox"]
 layout_mode = 2
-offset_top = 66.0
-offset_right = 324.0
-offset_bottom = 74.0
+offset_top = 180.0
+offset_right = 1152.0
+offset_bottom = 302.0
 grow_horizontal = 0
+size_flags_vertical = 3
 
-[node name="l_project" type="RichTextLabel" parent="windialog/vbox"]
+[node name="l_project" type="RichTextLabel" parent="vbox"]
 layout_mode = 2
-offset_top = 78.0
-offset_right = 324.0
-offset_bottom = 101.0
+offset_top = 306.0
+offset_right = 1152.0
+offset_bottom = 329.0
 grow_horizontal = 0
-size_flags_horizontal = 5
-size_flags_vertical = 5
+size_flags_stretch_ratio = 2.0
 text = "  Project ID"
 fit_content_height = true
 
-[node name="t_project" type="TextEdit" parent="windialog/vbox"]
+[node name="t_project" type="TextEdit" parent="vbox"]
 layout_mode = 2
-offset_top = 105.0
-offset_right = 324.0
-offset_bottom = 113.0
+offset_top = 333.0
+offset_right = 1152.0
+offset_bottom = 455.0
 grow_horizontal = 0
+size_flags_vertical = 3
 
-[node name="l_description" type="RichTextLabel" parent="windialog/vbox"]
+[node name="l_description" type="RichTextLabel" parent="vbox"]
 layout_mode = 2
-offset_top = 117.0
-offset_right = 324.0
-offset_bottom = 140.0
+offset_top = 459.0
+offset_right = 1152.0
+offset_bottom = 482.0
 grow_horizontal = 0
-size_flags_horizontal = 5
-size_flags_vertical = 5
+size_flags_stretch_ratio = 2.0
 text = "  Description"
 fit_content_height = true
 
-[node name="t_description" type="TextEdit" parent="windialog/vbox"]
+[node name="t_description" type="TextEdit" parent="vbox"]
 layout_mode = 2
-offset_top = 144.0
-offset_right = 324.0
-offset_bottom = 152.0
+offset_top = 486.0
+offset_right = 1152.0
+offset_bottom = 609.0
 grow_horizontal = 0
-
-[node name="spacer" type="Control" parent="windialog/vbox"]
-layout_mode = 2
-anchors_preset = 0
-offset_top = 156.0
-offset_right = 324.0
-offset_bottom = 213.0
-size_flags_horizontal = 5
 size_flags_vertical = 3
 
-[node name="b_confirm" type="Button" parent="windialog/vbox"]
+[node name="spacer" type="Control" parent="vbox"]
 layout_mode = 2
-offset_top = 217.0
-offset_right = 324.0
-offset_bottom = 248.0
+anchors_preset = 0
+offset_top = 613.0
+offset_right = 1152.0
+offset_bottom = 613.0
+size_flags_horizontal = 5
+
+[node name="b_confirm" type="Button" parent="vbox"]
+layout_mode = 2
+offset_top = 617.0
+offset_right = 1152.0
+offset_bottom = 648.0
 grow_horizontal = 0
+size_flags_stretch_ratio = 3.0
 text = "Confirm"
