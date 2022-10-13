@@ -55,8 +55,6 @@ func setup():
 	var file = FileAccess.open(togglkey, FileAccess.READ)
 	var keyText = file.get_as_text()
 	var test_json_conv = JSON.new()
-	# test_json_conv.parse_string(keyText)
-	#keyDict = test_json_conv.get_data()
 	keyDict = test_json_conv.parse_string(keyText)
 
 	if keyDict.keys().find("api_token") == -1:
@@ -121,6 +119,7 @@ func _on_request_completed(result, response_code, headers, body):
 	var json = JSON.new()
 	var string = body.get_string_from_utf8()
 	var error = json.parse(string)
+	print(string)
 
 	if error == OK:
 		var keyDict = json.get_data()

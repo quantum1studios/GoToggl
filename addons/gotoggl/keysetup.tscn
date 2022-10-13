@@ -6,8 +6,9 @@
 title = "GoToggl Wizard"
 position = Vector2i(434, 202)
 size = Vector2i(338, 268)
+visible = false
+transient = true
 exclusive = true
-always_on_top = true
 popup_window = true
 min_size = Vector2i(338, 268)
 content_scale_mode = 1

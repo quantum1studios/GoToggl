@@ -12,19 +12,19 @@ var b_confirm: Button
 signal updated_gen
 
 func _enter_tree() -> void:
-	t_api = get_node("windialog/vbox/t_api")
-	t_workspace = get_node("windialog/vbox/t_workspace")
-	t_project = get_node("windialog/vbox/t_project")
-	t_desc = get_node("windialog/vbox/t_description")
-	b_confirm = get_node("windialog/vbox/b_confirm")
+	t_api = get_node("vbox/t_api")
+	t_workspace = get_node("vbox/t_workspace")
+	t_project = get_node("vbox/t_project")
+	t_desc = get_node("vbox/t_description")
+	b_confirm = get_node("vbox/b_confirm")
 
 	b_confirm.connect("pressed",Callable(self,"_confirm"))
 	self.connect("visibility_changed",Callable(self,"_clear_lines"))
+	self.connect("close_requested", Callable(self, "hide"))
 
 func show_gen():
 	# If the togglkey already exists we show the current values
-	var file = FileAccess.new()
-	if file.file_exists(togglkey):
+	if FileAccess.file_exists(togglkey):
 		var json = JSON.new()
 		var error = json.parse(read_file(togglkey))
 		var dict = json.get_data()
@@ -43,8 +43,8 @@ func show_gen():
 		else:
 			t_desc.text = "GoToggl Entry"
 
-	self.show()
-	self.popup_centered()
+	show()
+	popup_centered_ratio(0.5)
 
 func get_api() -> String:
 	return t_api.get_text()
