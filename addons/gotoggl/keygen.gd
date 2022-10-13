@@ -1,9 +1,9 @@
-tool
+@tool
 extends HBoxContainer
 
 var togglkey = "res://addons/gotoggl/togglkey.json"
 
-var win_dialog: WindowDialog
+var win_dialog: Window
 
 var t_api: TextEdit
 var t_workspace: TextEdit
@@ -21,14 +21,16 @@ func _enter_tree() -> void:
 	t_desc = get_node("windialog/vbox/t_description")
 	b_confirm = get_node("windialog/vbox/b_confirm")
 
-	b_confirm.connect("pressed", self, "_confirm")
-	win_dialog.connect("popup_hide", self, "_clear_lines")
+	b_confirm.connect("pressed",Callable(self,"_confirm"))
+	win_dialog.connect("visibility_changed",Callable(self,"_clear_lines"))
 
 func show_gen():
 	# If the togglkey already exists we show the current values
 	var file = File.new()
 	if file.file_exists(togglkey):
-		var dict = JSON.parse(read_file(togglkey)).result
+		var json = JSON.new()
+		var error = json.parse(read_file(togglkey))
+		var dict = json.get_data()
 
 		if dict.keys().find("api_token") != -1:
 			t_api.text = dict["api_token"]
@@ -48,27 +50,27 @@ func show_gen():
 	win_dialog.popup_centered()
 
 func get_api() -> String:
-	return t_api.text
+	return t_api.get_text()
 
 func get_workspace() -> int:
-	return int(t_workspace.text)
+	return t_workspace.get_text().to_int()
 
 func get_project() -> int:
-	return int(t_project.text)
+	return t_project.get_text().to_int()
 
 func get_desc() -> String:
-	return t_desc.text
+	return t_desc.get_text()
 
 func _confirm() -> void:
-	if get_api().empty():
+	if get_api().is_empty():
 		print("GoToggl: Missing or Invalid API Token")
 		return
 	
-	if t_workspace.text.empty() || !t_project.text.is_valid_integer():
+	if t_workspace.text.is_empty() || !t_project.text.is_valid_int():
 		print("GoToggl: Missing or Invalid Workspace ID")
 		return
 
-	if t_project.text.empty() || !t_project.text.is_valid_integer():
+	if t_project.text.is_empty() || !t_project.text.is_valid_int():
 		print("GoToggl: Missing or Invalid Project ID")
 		return
 
@@ -78,12 +80,15 @@ func _confirm() -> void:
 		"project_id": get_project(),
 		"description": get_desc(),
 	}
-	write_file(togglkey, JSON.print(keyDict))
+	write_file(togglkey, JSON.stringify(keyDict))
 	win_dialog.hide()
-	yield(get_tree().create_timer(1), "timeout")
+	await get_tree().create_timer(1).timeout
 	emit_signal("updated_gen")
 
 func _clear_lines():
+	if win_dialog.visible:
+		return
+	
 	t_api.text = ""
 	t_workspace.text = ""
 	t_project.text = ""

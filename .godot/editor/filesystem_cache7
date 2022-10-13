@@ -1,0 +1,16 @@
+0b7126e0c6e86d3ec295a72f5aa6e0bd
+::res://::1665266985
+default_env.tres::Environment::-1::1665262952::0::1::::<><>::
+icon.png::CompressedTexture2D::8959215335093719760::1661283603::1665262966::1::::<><>::
+README.md::TextFile::-1::1661966919::0::1::::<><>::
+::res://addons/::1661963944
+::res://addons/gotoggl/::1665266951
+gotoggl.gd::GDScript::-1::1665266777::0::1::::<>EditorPlugin<>::
+GoTogglLogo.tscn::PackedScene::-1::1665262952::0::1::::<><>::res://addons/gotoggl/toggl-logo.png
+httptoggl.tscn::PackedScene::-1::1665262952::0::1::::<><>::
+keygen.gd::GDScript::-1::1665266801::0::1::::<>HBoxContainer<>::
+keysetup.tscn::PackedScene::7693652198736717592::1665266951::0::1::::<><>::res://addons/gotoggl/keygen.gd
+plugin.cfg::TextFile::-1::1661283732::0::1::::<><>::
+toggl-logo-active.png::CompressedTexture2D::326407681072147862::1661742409::1665262966::1::::<><>::
+toggl-logo.png::CompressedTexture2D::7505026877276394798::1661742384::1665262966::1::::<><>::
+togglkey.json::TextFile::-1::1661966824::0::1::::<><>::

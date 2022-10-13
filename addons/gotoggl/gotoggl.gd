@@ -1,8 +1,8 @@
-tool
+@tool
 extends EditorPlugin
 
 var togglkey = "res://addons/gotoggl/togglkey.json"
-var keyDict = {}
+var keyDict: Dictionary
 
 var authToken: String
 var apiKey: String
@@ -30,17 +30,20 @@ var time_end = 0
 var datetime: Dictionary
 
 func _enter_tree() -> void:
-	editorNode = get_tree().root.get_node("EditorNode")
-	dialog = dialog_scene.instance()
-	dialog.connect("updated_gen", self, "setup")
+	editorNode = get_tree().root
+	for _i in editorNode.get_children():
+		if _i.name == "@@16300":
+			editorNode = _i
+	dialog = dialog_scene.instantiate()
+	dialog.connect("updated_gen", Callable(self, "setup"))
 	editorNode.add_child(dialog)
-	add_tool_menu_item("GoToggl Wizard", self, "_show_gen")
+	add_tool_menu_item("GoToggl Wizard", Callable(self, "_show_gen"))
 
 	httpContainer = VBoxContainer.new()
 	httpClient = HTTPRequest.new()
 	httpContainer.add_child(httpClient)
 	editorNode.add_child(httpContainer)
-	httpClient.connect("request_completed", self, "_on_request_completed")
+	httpClient.connect("request_completed", Callable(self, "_on_request_completed"))
 
 	var file = File.new()
 	if file.file_exists(togglkey):
@@ -53,7 +56,10 @@ func setup():
 	var file = File.new()
 	file.open(togglkey, file.READ)
 	var keyText = file.get_as_text()
-	keyDict = JSON.parse(keyText).result
+	var test_json_conv = JSON.new()
+	# test_json_conv.parse_string(keyText)
+	#keyDict = test_json_conv.get_data()
+	keyDict = test_json_conv.parse_string(keyText)
 	file.close()
 
 	if keyDict.keys().find("api_token") == -1:
@@ -107,35 +113,38 @@ func _post_time():
 		"created_with": "GoToggl",
 		"wid": workspace,
 		"tags": ["billed"],
-		"duration": time_end - time_start,
+		"duration": int(time_end - time_start),
 		"start": "%04d-%02d-%02dT%02d:%02d:%02d.000Z" % [datetime["year"], datetime["month"], datetime["day"], datetime["hour"], datetime["minute"], datetime["second"]],
 		"pid": project,
 	}
-	var query = JSON.print(body)
+	var query = JSON.stringify(body)
 	httpClient.request(url, headers, true, HTTPClient.METHOD_POST, query)
 
 func _on_request_completed(result, response_code, headers, body):
-	var json = JSON.parse(body.get_string_from_utf8())
+	var json = JSON.new()
+	var string = body.get_string_from_utf8()
+	var error = json.parse(string)
 
-	if json.error == OK:
-		if json.result.keys().find("default_workspace_id") != -1:
+	if error == OK:
+		var keyDict = json.get_data()
+		if keyDict.keys().find("default_workspace_id") != -1:
 			print("GoToggl Authenticated")
 			if !is_Initialized:
-				button = button_scene.instance()
+				button = button_scene.instantiate()
 				add_control_to_container(0, button)
 				b_toggl = button
 				b_toggl.flat = true
-				b_toggl.connect("pressed", self, "_button_pressed")
+				b_toggl.connect("pressed",Callable(self,"_button_pressed"))
 				is_Initialized = true
 
 func _button_pressed():
 	if !isActive: #start the counter
 		_set_icon(true)
-		time_start = OS.get_unix_time()
-		datetime = OS.get_datetime()
+		time_start = Time.get_unix_time_from_system()
+		datetime = Time.get_datetime_dict_from_system()
 	else: #reset counter and submit time to Toggl
 		_set_icon(false)
-		time_end = OS.get_unix_time()
+		time_end = Time.get_unix_time_from_system()
 		_post_time()
 
 func _set_icon(active:bool):
@@ -145,5 +154,5 @@ func _set_icon(active:bool):
 	else:
 		b_toggl.icon = b_toggl_inactive
 
-func _show_gen(i):
+func _show_gen():
 	dialog.call("show_gen")
