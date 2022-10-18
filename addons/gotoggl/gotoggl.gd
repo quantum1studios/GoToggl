@@ -32,7 +32,7 @@ var datetime: Dictionary
 func _enter_tree() -> void:
 	editorNode = get_tree().root
 	for _i in editorNode.get_children():
-		if _i.name == "@@16300":
+		if _i.name == "@@16380":
 			editorNode = _i
 	dialog = dialog_scene.instantiate()
 	dialog.connect("updated_gen", Callable(self, "setup"))
@@ -46,6 +46,7 @@ func _enter_tree() -> void:
 	httpClient.connect("request_completed", Callable(self, "_on_request_completed"))
 
 	if FileAccess.file_exists(togglkey):
+		await get_tree().create_timer(1.4).timeout
 		setup()
 	else:
 		print("GoToggl: togglkey.json does not exist. Generate using Project > Tool > GoToggl Wizard.")
@@ -120,7 +121,7 @@ func _on_request_completed(result, response_code, headers, body):
 	var json = JSON.new()
 	var string = body.get_string_from_utf8()
 	var error = json.parse(string)
-	print(string)
+	#print(string)
 
 	if error == OK:
 		var keyDict = json.get_data()
@@ -131,7 +132,7 @@ func _on_request_completed(result, response_code, headers, body):
 				add_control_to_container(0, button)
 				b_toggl = button
 				b_toggl.flat = true
-				b_toggl.connect("pressed",Callable(self,"_button_pressed"))
+				b_toggl.connect("pressed", Callable(self,"_button_pressed"))
 				is_Initialized = true
 
 func _button_pressed():

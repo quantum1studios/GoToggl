@@ -30,17 +30,22 @@ func show_gen():
 		var dict = json.get_data()
 
 		if dict.keys().find("api_token") != -1:
+			t_api.clear()
 			t_api.text = dict["api_token"]
 
 		if dict.keys().find("workspace_id") != -1:
+			t_workspace.clear()
 			t_workspace.text = str(dict["workspace_id"])
 
 		if dict.keys().find("project_id") != -1:
+			t_project.clear()
 			t_project.text = str(dict["project_id"])
 		
 		if dict.keys().find("description") != -1:
+			t_desc.clear()
 			t_desc.text = dict["description"]
 		else:
+			t_desc.clear()
 			t_desc.text = "GoToggl Entry"
 
 	show()
