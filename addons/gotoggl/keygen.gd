@@ -86,10 +86,10 @@ func _clear_lines():
 	if self.visible:
 		return
 	
-	t_api.text = ""
-	t_workspace.text = ""
-	t_project.text = ""
-	t_desc.text = ""
+	t_api.clear()
+	t_workspace.clear()
+	t_project.clear()
+	t_desc.clear()
 
 func write_file(file_name, string:String):
 	var file = FileAccess.open(file_name, FileAccess.WRITE)

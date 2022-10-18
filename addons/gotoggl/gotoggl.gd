@@ -107,6 +107,7 @@ func _post_time():
 		"description": description,
 		"created_with": "GoToggl",
 		"wid": workspace,
+		"billable": true,
 		"tags": ["billed"],
 		"duration": int(time_end - time_start),
 		"start": "%04d-%02d-%02dT%02d:%02d:%02d.000Z" % [datetime["year"], datetime["month"], datetime["day"], datetime["hour"], datetime["minute"], datetime["second"]],
